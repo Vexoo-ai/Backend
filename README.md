@@ -19,7 +19,7 @@ Welcome to the VEXOO API, a FastAPI-based backend designed to provide comprehens
 ### Installation
 
 ```sh
-git clone https://github.com/your-repository/VEXOO-API.git
+git clone https://github.com/Vexoo-ai/Backend.git
 cd VEXOO-API
 pip install -r requirements.txt
 uvicorn app.main:app --reload --proxy-headers --host 0.0.0.0 --port 80
