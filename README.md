@@ -23,6 +23,8 @@ git clone https://github.com/Vexoo-ai/Backend.git
 cd VEXOO-API
 pip install -r requirements.txt
 uvicorn app.main:app --reload --proxy-headers --host 0.0.0.0 --port 80
+
+http://localhost/docs#/
 ```
 
 ### Usage
