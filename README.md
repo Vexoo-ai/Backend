@@ -1,4 +1,3 @@
-```markdown
 # VEXOO API
 
 Welcome to the VEXOO API, a FastAPI-based backend designed to provide comprehensive search and language model processing capabilities. This project integrates various services, including web crawling and language model generation, to deliver rich, contextual responses to user queries.
