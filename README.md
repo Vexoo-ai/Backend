@@ -36,8 +36,6 @@ The API provides endpoints for various functionalities, including:
 
 Refer to the API documentation for detailed usage of each endpoint.
 
-To view the backend and explore the API documentation, open:
-
 ```sh
 http://localhost/docs#/
 ```
