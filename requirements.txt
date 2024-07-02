@@ -1,0 +1,15 @@
+flask==2.3.2
+mistralai
+gunicorn==20.0.4
+wfastcgi==3.0.0
+pytz
+python-dateutil
+serpapi
+scikit-learn
+google-search-results
+pandas
+requests
+python-dotenv
+streamlit
+flask-cors
+fastapi

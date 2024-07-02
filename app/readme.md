@@ -1,0 +1,1 @@
+To run the app: uvicorn app.main:app --reload --proxy-headers --host 0.0.0.0 --port 80
