@@ -5,7 +5,7 @@ Welcome to the VEXOO API, a FastAPI-based backend designed to provide comprehens
 ## Features
 
 - **Search Engine Integration**: Leverages custom web crawlers to fetch relevant information from the internet based on user queries.
-- **Language Model Processing**: Utilizes Mixtral 22B - Azure AI to generate comprehensive responses, summaries, and insights from the collected data.
+- **Language Model Processing**: Utilizes Mixtral 22B to generate comprehensive responses, summaries, and insights from the collected data.
 - **FastAPI Framework**: Built with FastAPI, offering high performance and easy scalability for web applications.
 - **Environment Configuration**: Supports `.env` for easy configuration of API keys, endpoints, and other sensitive information.
 
