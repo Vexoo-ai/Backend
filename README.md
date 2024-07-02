@@ -23,8 +23,6 @@ git clone https://github.com/Vexoo-ai/Backend.git
 cd VEXOO-API
 pip install -r requirements.txt
 uvicorn app.main:app --reload --proxy-headers --host 0.0.0.0 --port 80
-
-http://localhost/docs#/
 ```
 
 ### Usage
@@ -37,6 +35,12 @@ The API provides endpoints for various functionalities, including:
 - **POST /api/v1/searchVexooStream**: Generates a comprehensive stream response using the Mixtral22B.
 
 Refer to the API documentation for detailed usage of each endpoint.
+
+To view the backend and explore the API documentation, open:
+
+```sh
+http://localhost/docs#/
+```
 
 ## Development
 
