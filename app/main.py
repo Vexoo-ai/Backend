@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from flask_cors import CORS
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.api_router import api_router
 from app.utils.models import RequestSizeLimitMiddleware, RootResponse
@@ -14,8 +14,6 @@ logging.basicConfig(
 )
 
 app = FastAPI(title="VEXOO API", version="0.0.1")
-
-CORS(app)
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -33,6 +31,14 @@ server_start_time = datetime.datetime.now()
 
 # Mount the API router, which handles versioning internally
 app.include_router(api_router, prefix="/api")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/", response_model=RootResponse)
