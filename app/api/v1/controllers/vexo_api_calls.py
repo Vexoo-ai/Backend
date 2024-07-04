@@ -75,7 +75,7 @@ async def get_llm_response_stream(request: SerpRequest):
         
         async def generate():
             async for chunk in llm.call_freshprompt_stream(model_name, args.query):
-                yield f"data: {chunk}\n\n"
+                yield f"{chunk}"
 
         return StreamingResponse(generate(), media_type="text/event-stream")
 
