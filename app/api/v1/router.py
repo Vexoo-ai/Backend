@@ -17,8 +17,15 @@ async def fetch_llm_response(
 ) -> StreamingResponse:
     return await get_llm_response(request)  
 
+# @vexo_api_router.post("/searchVexooStream")
+# async def fetch_llm_response(
+#     request: SerpRequest = Body(...)
+# ) -> StreamingResponse:
+#     return await get_llm_response_stream(request)  
+
+
 @vexo_api_router.post("/searchVexooStream")
 async def fetch_llm_response(
     request: SerpRequest = Body(...)
 ) -> StreamingResponse:
-    return await get_llm_response_stream(request)  
+    return await get_llm_response_stream(request)
