@@ -71,13 +71,13 @@ async def get_llm_response_stream(request: SerpRequest):
         raise HTTPException(status_code=400, detail="Invalid input: query is required")
 
     try:
-        model_name = "azureai"
+        model_name = "mistral-large-latest"  # or whichever model you're using
         
         async def generate():
-            for chunk in llm.call_freshprompt_stream(model_name, args.query):
-                yield chunk
+            async for chunk in llm.call_freshprompt_stream(model_name, args.query):
+                yield f"data: {chunk}\n\n"
 
-        return StreamingResponse(generate(), media_type="text/plain")
+        return StreamingResponse(generate(), media_type="text/event-stream")
 
     except Exception as e:
         # Log the exception here
