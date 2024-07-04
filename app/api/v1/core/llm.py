@@ -7,6 +7,7 @@ import os
 from mistralai.client import MistralClient
 from mistralai.models.chat_completion import ChatMessage
 from datetime import datetime
+import asyncio
 
 def configure():
     load_dotenv()
@@ -17,7 +18,7 @@ from tenacity import retry, stop_after_attempt, wait_fixed
 import os
 import json
 from datetime import datetime
-from mistralai.client import MistralClient
+from mistralai.async_client import MistralAsyncClient
 from mistralai.models.chat_completion import ChatMessage
 from dotenv import load_dotenv
 
@@ -134,7 +135,7 @@ Your goal is to provide the most informative, accurate, and well-sourced respons
 
 
 
-def call_freshprompt_stream(model, question, check_premise=False, verbose=False):
+async def call_freshprompt_stream(model, question, check_premise=False, verbose=False):
     print(f"Processing query: {question}")
     
     search_data = serp_calls.call_search_engine(question)
@@ -173,7 +174,7 @@ IMPORTANT: Ensure your response is comprehensive, accurate, and directly applica
     
     print(f"Formatted freshprompt question: {freshprompt_question}")
     
-    client = MistralClient(api_key=os.getenv('api_key'), endpoint=os.getenv('endpoint'))
+    client = MistralAsyncClient(api_key=os.getenv('api_key'), endpoint=os.getenv('endpoint'))
     model = "azureai"
 
     current_date = datetime.now().strftime("%Y-%m-%d")
@@ -206,35 +207,32 @@ Knowledge cutoff: {current_date}"""
         ChatMessage(role="user", content=freshprompt_question)
     ]
     
-    def generate_response():
-        full_response = ""
-        chat_response = client.chat_stream(
-            model=model,
-            messages=messages,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            safe_mode=False
-        )
-        
-        for chunk in chat_response:
-            content = chunk.choices[0].delta.content
+    async_response = client.chat_stream(
+        model=model,
+        messages=messages,
+        temperature=temperature,
+        max_tokens=max_tokens
+    )
+
+    full_response = ""
+    async for chunk in async_response:
+        content = chunk.choices[0].delta.content
+        if content:
             full_response += content
             yield content
 
-        # Check if the response seems incomplete or lacks a conclusion
-        if not re.search(r'(conclusion|summary|in summary|to summarize|in conclusion)', full_response.lower()) or \
-           not re.search(r'(\.\s*$|\}\s*$)', full_response.strip()):
-            completion_message = "\n\nTo conclude: "
-            summary = client.chat(
-                model=model,
-                messages=[
-                    ChatMessage(role="system", content="Complete the following response by providing a concise summary of the main points discussed. Ensure all code blocks are closed and the explanation is finalized:"),
-                    ChatMessage(role="user", content=full_response + completion_message)
-                ],
-                max_tokens=500,
-                temperature=0.2
-            )
-            yield completion_message + summary.choices[0].message.content
-
-    for content in generate_response():
-        yield content
+    # Check if the response seems incomplete or lacks a conclusion
+    if not re.search(r'(conclusion|summary|in summary|to summarize|in conclusion)', full_response.lower()) or \
+       not re.search(r'(\.\s*$|\}\s*$)', full_response.strip()):
+        completion_message = "\n\nTo conclude: "
+        yield completion_message
+        summary_response = await client.chat(
+            model=model,
+            messages=[
+                ChatMessage(role="system", content="Complete the following response by providing a concise summary of the main points discussed. Ensure all code blocks are closed and the explanation is finalized:"),
+                ChatMessage(role="user", content=full_response + completion_message)
+            ],
+            temperature=0.2,
+            max_tokens=500
+        )
+        yield summary_response.choices[0].message.content
